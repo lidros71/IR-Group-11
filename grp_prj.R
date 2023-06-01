@@ -48,35 +48,65 @@ p10 <- data.frame(matrix(ncol = 15, nrow = 50))
 # Set column names
 colnames(p10) <- paste0("system", 1:15)
 
-# Iterate over each table
-for (i in 1:length(table_list)) {
-  current_table <- table_list[[i]]  # Get the current table
-  print("system")
-  print(i)
+total_average_precision <- 0
+
+# Iterate over each systems
+# length(table_list)
+for (i in 1:15) {
+  current_table <- table_list[[i]]  # Get the current system
+  # print(paste("system: ", i))
   
-  # Iterate over values '401' to '450'
-  for (j in 401:402) {
+  # Iterate over topic '401' to '450'
+  for (j in 401:450) {
     # Filter rows for the current value
     rows <- current_table[current_table[, 1] == j, ]
     
-    # Select the top 10 rows
+    # Select the top 10 docs of the topics in the system
     top_rows <- rows[1:10, ]
     
-    print("topic")
-    print(j)
-    # Iterate through each row of top_rows
+    # print(paste("topic: ", j))
+    
+    relDocCount <-0 #to count the number of relevant doc in a topic, in current system iteration
+    totalPrecision <- 0 #used to calc average precision
+    
+    # Iterate through each row of top document
     for (k in 1:nrow(top_rows)) {
+      # k = number of document iterated for the current topic in current system
       row <- top_rows[k, ]
     
-    # Get the ID of doc
+      # Get the ID of doc
       doc_ID <- row[[3]]
       #print(doc_ID)
-        
+      #print(paste("k: ", k))
+      
       # checking whether doc is relevant or not
       if (any(clean_qrels$C1 == j & clean_qrels$C3 == doc_ID)) {
-        print(doc_ID)
-        print("found")
+        #print(doc_ID)
+        #print("found")
+        
+        relDocCount <- relDocCount + 1
+        precision <- relDocCount / k
+        #print(precision)
+        totalPrecision <- totalPrecision + precision
       }
+    }
+    
+    # print(relDocCount)
+    # print(paste("totalPrecision:", totalPrecision, ", relDocCount:", relDocCount))
+    
+    # only execute the process if relDocCount is not 0, cus will make into NaN if 0
+    if(relDocCount != 0){
+      averagePrecision <- totalPrecision / relDocCount
+      # print(paste("averageprecision: ", averagePrecision))
+      # print(paste("p10 at row:", j-400, ", column:", i))
+      p10[j-400,i] <- averagePrecision
+      total_average_precision <- total_average_precision + averagePrecision
+    } else {
+      averagePrecision <- 0
+      # print(paste("p10 at row:", j-400, ", column:", i))
+      p10[j-400,i] <- averagePrecision
     }
   }
 }
+
+print("Done")
