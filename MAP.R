@@ -1,5 +1,5 @@
 # Create an empty table with 15 columns and 1 rows
-p100 <- data.frame(matrix(ncol = 15, nrow = 50))
+p100 <- data.frame(matrix(ncol = 15, nrow = 51))
 mean_average_precision <- data.frame(matrix(ncol = 15, nrow = 1))
 
 # Take all the average_precision of the systems
@@ -31,20 +31,21 @@ for (i in 1:15) {
       # Get the ID of doc
       doc_ID <- row[[3]]
       #print(doc_ID)
-      print(paste("k: ", k))
-      print(doc_ID)
+      #print(paste("k: ", k))
+      #print(doc_ID)
       
       # checking whether doc is relevant or not
       if (any(clean_qrels$C1 == j & clean_qrels$C3 == doc_ID)) {
-        print(paste("found: ", doc_ID))
+        #print(paste("found: ", doc_ID))
         
         relDocCount <- relDocCount + 1
         precision <- relDocCount / k
         #print(precision)
         totalPrecision <- totalPrecision + precision
-      } else {
-        print(paste("notfound: ", doc_ID))
-      }
+      } 
+      # else {
+      #   print(paste("notfound: ", doc_ID))
+      # }
     }
     
     # print(relDocCount)
@@ -64,5 +65,6 @@ for (i in 1:15) {
     }
   }
   
-  mean_average_precision[1, i] <- totalAveragePrecision/80
+  # put MAP at row 51
+  p100[51, i] <- totalAveragePrecision/80
 }

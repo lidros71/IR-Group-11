@@ -43,7 +43,7 @@ input_15 <- read.table("input.UT800")
 table_list <- list(input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9, input_10, input_11, input_12, input_13, input_14, input_15)
 
 # Create an empty table with 15 columns and 50 rows
-p10 <- data.frame(matrix(ncol = 15, nrow = 50))
+p10 <- data.frame(matrix(ncol = 15, nrow = 51))
 
 # Set column names
 colnames(p10) <- paste0("system", 1:15)
@@ -56,6 +56,8 @@ for (i in 1:15) {
   current_table <- table_list[[i]]  # Get the current system
   # print(paste("system: ", i))
   
+  totalPrecision <- 0
+  
   # Iterate over topic '401' to '450'
   for (j in 401:450) {
     # Filter rows for the current value
@@ -67,7 +69,7 @@ for (i in 1:15) {
     # print(paste("topic: ", j))
     
     relDocCount <-0 #to count the number of relevant doc in a topic, in current system iteration
-    totalPrecision <- 0 #used to calc average precision
+    precision <- 0 #used to calc average precision
     
     # Iterate through each row of top document
     for (k in 1:nrow(top_rows)) {
@@ -87,26 +89,14 @@ for (i in 1:15) {
         relDocCount <- relDocCount + 1
         precision <- relDocCount / k
         #print(precision)
-        totalPrecision <- totalPrecision + precision
       }
     }
-    
-    # print(relDocCount)
-    # print(paste("totalPrecision:", totalPrecision, ", relDocCount:", relDocCount))
-    
-    # only execute the process if relDocCount is not 0, cus will make into NaN if 0
-    if(relDocCount != 0){
-      averagePrecision <- totalPrecision / relDocCount
-      # print(paste("averageprecision: ", averagePrecision))
-      # print(paste("p10 at row:", j-400, ", column:", i))
-      p10[j-400,i] <- averagePrecision
-      total_average_precision <- total_average_precision + averagePrecision
-    } else {
-      averagePrecision <- 0
-      # print(paste("p10 at row:", j-400, ", column:", i))
-      p10[j-400,i] <- averagePrecision
-    }
+    p10[j-400,i] <- precision
+    totalPrecision = totalPrecision + precision
   }
+  
+  #put the average at line 51 for each system
+  p10[51,i] <- totalPrecision/50
 }
 
 print("Done")
