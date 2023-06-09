@@ -16,7 +16,7 @@ for (i in 1:15) {
     rows <- current_table[current_table[, 1] == j, ]
     
     # Select the top 80 docs of the topics in the system
-    top_rows <- rows[1:10, ]
+    top_rows <- rows[1:80, ]
     
     # print(paste("topic: ", j))
     
@@ -66,5 +66,5 @@ for (i in 1:15) {
   }
   
   # put MAP at row 51
-  p100[51, i] <- totalAveragePrecision/80
+  p100[51, i] <- totalAveragePrecision/50
 }
