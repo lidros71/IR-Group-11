@@ -16,7 +16,7 @@ for (i in 1:15) {
     rows <- current_table[current_table[, 1] == j, ]
     
     # Select the top 80 docs of the topics in the system
-    top_rows <- rows[1:80, ]
+    top_rows <- rows[1:100, ]
     
     # print(paste("topic: ", j))
     
@@ -31,7 +31,10 @@ for (i in 1:15) {
       # Get the ID of doc
       doc_ID <- row[[3]]
       #print(doc_ID)
-      #print(paste("k: ", k))
+      if (j == 403 & i == 6) {
+        print(paste("k: ", k))
+      }
+      
       #print(doc_ID)
       
       # checking whether doc is relevant or not
