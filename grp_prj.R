@@ -48,15 +48,13 @@ p10 <- data.frame(matrix(ncol = 15, nrow = 51))
 # Set column names
 colnames(p10) <- paste0("system", 1:15)
 
-total_average_precision <- 0
-
 # Iterate over each systems
 # length(table_list)
 for (i in 1:15) {
   current_table <- table_list[[i]]  # Get the current system
   # print(paste("system: ", i))
   
-  totalPrecision <- 0
+  totalPrecision <- 0 # UNTUK KIRA AVERAGE PRECISION OF THE SYSTEM
   
   # Iterate over topic '401' to '450'
   for (j in 401:450) {
@@ -66,10 +64,8 @@ for (i in 1:15) {
     # Select the top 10 docs of the topics in the system
     top_rows <- rows[1:10, ]
     
-    # print(paste("topic: ", j))
-    
     relDocCount <-0 #to count the number of relevant doc in a topic, in current system iteration
-    precision <- 0 #used to calc average precision
+    precision <- 0
     
     # Iterate through each row of top document
     for (k in 1:nrow(top_rows)) {
@@ -78,20 +74,19 @@ for (i in 1:15) {
     
       # Get the ID of doc
       doc_ID <- row[[3]]
-      #print(doc_ID)
-      #print(paste("k: ", k))
       
       # checking whether doc is relevant or not
       if (any(clean_qrels$C1 == j & clean_qrels$C3 == doc_ID)) {
-        #print(doc_ID)
-        #print("found")
         
         relDocCount <- relDocCount + 1
         precision <- relDocCount / k
-        #print(precision)
       }
     }
+    
+    #STORING IN THE TABLE
     p10[j-400,i] <- precision
+    
+    #FOR LINE 51
     totalPrecision = totalPrecision + precision
   }
   
