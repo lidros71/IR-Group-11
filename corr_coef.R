@@ -7,7 +7,7 @@ calc_cor_coef <- function(value1, value2){
   # `P@1`
   # MAP1000
   
-  correlation <- cor(value1, value2)
+  correlation <- cor(value1, value2, method = "kendall")
   
   print(paste("correlation coefficient: ", correlation))
   
@@ -17,5 +17,4 @@ calc_cor_coef <- function(value1, value2){
   p_value <- correlation_test$p.value
   
   print(paste("p-value: ", p_value))
-  
 }
